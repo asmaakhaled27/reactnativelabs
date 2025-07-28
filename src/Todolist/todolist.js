@@ -25,7 +25,8 @@ export default function TodoList() {
         setTodos(JSON.parse(jsonValue));
       }
     } catch (e) {
-      // handle error
+
+      console.error("Failed to load todos from storage", e);
     }
   };
 
@@ -33,7 +34,7 @@ export default function TodoList() {
     try {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
     } catch (e) {
-      // handle error
+      console.error("Failed to save todos to storage", e);
     }
   };
 

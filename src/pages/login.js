@@ -1,15 +1,53 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { selectFavorites } from '../store';
 
 export default function Login() {
-  const { control, handleSubmit, formState: { errors } } = useForm();
+  const { control, handleSubmit, formState: { errors }, reset } = useForm();
   const [showPassword, setShowPassword] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigation = useNavigation();
+  const favorites = useSelector(selectFavorites);
 
-  const onSubmit = data => {
-    // Handle login logic here
-    alert('Login Success!\n' + JSON.stringify(data, null, 2));
+  useEffect(() => {
+    AsyncStorage.getItem('user').then(data => {
+      if (data) setUser(JSON.parse(data));
+    });
+  }, []);
+
+  const onSubmit = async (data) => {
+    try {
+      await AsyncStorage.setItem("user", JSON.stringify(data));
+      setUser(data);
+      Alert.alert('Login Success!', JSON.stringify(data, null, 2));
+      navigation.navigate("movielist");
+    } catch (e) {
+      Alert.alert("Error", "Failed to save user data");
+      console.error(e);
+    }
   };
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('user');
+    setUser(null);
+    reset();
+  };
+
+  if (user) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome, {user.username}!</Text>
+        <Text style={styles.profileText}>Number of Favorite Films: {favorites.length}</Text>
+        <TouchableOpacity style={styles.loginBtn} onPress={handleLogout}>
+          <Text style={styles.loginBtnText}>Logout</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -190,5 +228,12 @@ const styles = StyleSheet.create({
   showBtnText: {
     color: '#4a148c',
     fontWeight: 'bold',
+  },
+  profileText: {
+    color: '#6a1b9a',
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 12,
+    alignSelf: 'center',
   },
 }); 

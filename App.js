@@ -1,20 +1,36 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// import React from "react";
+// import { NavigationContainer } from "@react-navigation/native";
+// import { createDrawerNavigator } from "@react-navigation/drawer";
+// import ProfileCard from "./src/Components/profilecard";
+// import Lab1 from "./src/pages/Lab1";
+// import Lab2 from "./src/pages/Lab2";
+// import Lab3 from "./src/pages/Lab3";
+
+// const Drawer = createDrawerNavigator();
+
+// export default function App() {
+//   return (
+//     <NavigationContainer>
+//       <Drawer.Navigator initialRouteName="Profile">
+
+//         <Drawer.Screen name="Lab 1" component={ProfileCard} />
+//         {/* <Drawer.Screen name="Lab 2" component={Lab2} />
+//         <Drawer.Screen name="Lab 3" component={Lab3} /> */}
+//       </Drawer.Navigator>
+//     </NavigationContainer>
+//   );
+// }
+// App.js
+import React from 'react';
+import "react-native-gesture-handler";
+
+import { NavigationContainer } from '@react-navigation/native';
+import DrawerNavigator from './src/pages/DrawerNavigator';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <DrawerNavigator />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
